@@ -326,7 +326,7 @@ const formatDateTime = (isoString) => {
           }}
         >
           <Typography variant="h6" mb={2}>
-            Update Flat {selectedFlat?.flat} ({selectedFlat?.wing})
+            Update Flat : {selectedFlat?.flat} ({selectedFlat?.wing})
           </Typography>
 
           <TextField
