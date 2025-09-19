@@ -118,6 +118,14 @@ import cors from "cors";
 import dotenv from "dotenv";
 import pool from "./db.js";
 
+
+
+import path from "path";
+import { fileURLToPath } from "url";
+
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 dotenv.config();
 
 const app = express();
@@ -201,4 +209,10 @@ app.put("/api/flats/:flatKey", async (req, res) => {
   }
 });
 
+// Serve frontend
+app.use(express.static(path.join(__dirname, "../frontend/dist")));
+
+app.get("*", (req, res) => {
+  res.sendFile(path.join(__dirname, "../frontend/dist/index.html"));
+});
 app.listen(PORT, () => console.log(`Server running on http://localhost:${PORT}`));
