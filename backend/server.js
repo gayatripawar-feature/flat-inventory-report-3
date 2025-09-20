@@ -136,9 +136,9 @@ app.use(cors());
 app.use(express.json());
 
 // Sample route
-app.get("/", (req, res) => {
-  res.send("Backend is running 🚀");
-});
+// app.get("/", (req, res) => {
+//   res.send("Backend is running 🚀");
+// });
 
 // Login API
 app.post("/api/login", async (req, res) => {
