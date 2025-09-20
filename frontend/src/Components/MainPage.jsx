@@ -350,7 +350,7 @@ const downloadCSV = () => {
               sx={{ bgcolor: "#ff9800", "&:hover": { bgcolor: "#fb8c00" } }}
               onClick={() => setDrawerOpen(true)}
             >
-              Check Detailed Report
+              Check Detailed Report analysis
             </Button>
               <Button
     variant="contained"
