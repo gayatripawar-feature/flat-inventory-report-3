@@ -218,6 +218,9 @@ app.put("/api/flats/:flatKey", async (req, res) => {
 
 
 // Serve frontend (React build inside backend/dist)
+
+
+// __dirname is /opt/render/project/src/backend on Render.
 app.use(express.static(path.join(__dirname, "dist")));
 
 app.get("*", (req, res) => {
