@@ -188,26 +188,13 @@ const [formData, setFormData] = useState({
 
 
   // Format ISO date string → "YYYY-MM-DD HH:mm:ss"
-// const formatDateTime = (isoString) => {
-//   if (!isoString) return "-";
-//   const date = new Date(isoString);
-//   return date.toISOString().slice(0, 19).replace("T", " ");
-// };
-
 const formatDateTime = (isoString) => {
   if (!isoString) return "-";
   const date = new Date(isoString);
-  
-  // Format as "YYYY-MM-DD HH:mm:ss" in local time
-  const yyyy = date.getFullYear();
-  const mm = String(date.getMonth() + 1).padStart(2, "0");
-  const dd = String(date.getDate()).padStart(2, "0");
-  const hh = String(date.getHours()).padStart(2, "0");
-  const min = String(date.getMinutes()).padStart(2, "0");
-  const ss = String(date.getSeconds()).padStart(2, "0");
-
-  return `${yyyy}-${mm}-${dd} ${hh}:${min}:${ss}`;
+  return date.toISOString().slice(0, 19).replace("T", " ");
 };
+
+
 
 
   return (
