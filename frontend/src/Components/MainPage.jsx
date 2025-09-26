@@ -82,6 +82,8 @@ const fetchFlats = async () => {
         holdUntil: f.hold_until
       };
     });
+
+    // alert(data[15].updated_at);
      setFlats(data);
     setFlatStatus(statusMap);
    } catch (err) {
@@ -190,15 +192,51 @@ if (currentStatus === "landowner") {
     let payload = { status: formData.status, date: formData.date, agreementvalue: formData.agreementvalue,
   saleablearea: formData.saleablearea,
   cost: formData.cost };
-     if (formData.status === "hold") {
-      // const holdUntil = new Date(Date.now() + 10 * 1000); // 1 min hold
-      const holdUntil = new Date(Date.now() + 60 * 60 * 1000); // 1 hour hold
-      // Convert to local MySQL-friendly format
-      const localDateTime = holdUntil.toLocaleString("sv-SE", { hour12: false }).replace(" ", "T");
-      payload.holdUntil = localDateTime;
-    } else {
-      payload.holdUntil = null;
-    }
+//      if (formData.status === "hold") {
+//       // const holdUntil = new Date(Date.now() + 10 * 1000); // 1 min hold
+//       const holdUntil = new Date(Date.now() + 60 * 60 * 1000); // 1 hour hold
+//       // Convert to local MySQL-friendly format
+//       // const localDateTime = holdUntil.toLocaleString("sv-SE", { hour12: false }).replace(" ", "T");
+//       // payload.holdUntil = localDateTime;
+
+
+
+//       // IST 
+//       const parts = new Intl.DateTimeFormat("sv-SE", options).formatToParts(holdUntil);
+// const dateStr = `${parts.find(p => p.type === "year").value}-${parts.find(p => p.type === "month").value}-${parts.find(p => p.type === "day").value}`;
+// const timeStr = `${parts.find(p => p.type === "hour").value}:${parts.find(p => p.type === "minute").value}:${parts.find(p => p.type === "second").value}`;
+
+// payload.holdUntil = `${dateStr} ${timeStr}`; // MySQL friendl
+//     } else {
+//       payload.holdUntil = null;
+//     }
+
+
+
+if (formData.status === "hold") {
+  const holdUntil = new Date(Date.now() + 60 * 60 * 1000); // +1 hour
+
+  const options = {
+    timeZone: "Asia/Kolkata",
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+    hour: "2-digit",
+    minute: "2-digit",
+    second: "2-digit",
+    hour12: false,
+  };
+
+  const parts = new Intl.DateTimeFormat("sv-SE", options).formatToParts(holdUntil);
+  const dateStr = `${parts.find(p => p.type === "year").value}-${parts.find(p => p.type === "month").value}-${parts.find(p => p.type === "day").value}`;
+  const timeStr = `${parts.find(p => p.type === "hour").value}:${parts.find(p => p.type === "minute").value}:${parts.find(p => p.type === "second").value}`;
+
+  payload.holdUntil = `${dateStr} ${timeStr}`; // → "2025-09-26 15:45:30"
+} else {
+  payload.holdUntil = null;
+}
+
+
     const res = await fetch(`/api/flats/${selectedFlat.flatKey}`, {
     // localhost:
     // const res = await fetch(`http://localhost:5000/api/flats/${selectedFlat.flatKey}`, {
@@ -214,6 +252,7 @@ if (currentStatus === "landowner") {
         status: formData.status,
         date: formData.date,
         holdUntil: payload.holdUntil
+      
       }
     }));
   setOpenModal(false);
@@ -229,16 +268,65 @@ if (currentStatus === "landowner") {
   }
 };
 
-
+// First:
 const formatDateTime = (isoString) => {
   if (!isoString) return "-";
-  // If MySQL gives string (already formatted)
-  if (typeof dateVal === "string") return dateVal.replace("T", " ").slice(0, 19);
-  const date = new Date(isoString);
-  const pad = (n) => n.toString().padStart(2, "0");
 
-  return `${date.getFullYear()}-${pad(date.getMonth()+1)}-${pad(date.getDate())} ${pad(date.getHours())}:${pad(date.getMinutes())}:${pad(date.getSeconds())}`;
- 
+  // const date = new Date();
+const date = new Date(isoString);
+
+  const options = {
+    timeZone: "Asia/Kolkata",
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+    hour: "2-digit",
+    minute: "2-digit",
+    second: "2-digit",
+    hour12: false,
+  };
+
+  // const parts = new Intl.DateTimeFormat("sv-SE", options).formatToParts(date);
+  // const dateStr = `${parts.find(p => p.type === "year").value}-${parts.find(p => p.type === "month").value}-${parts.find(p => p.type === "day").value}`;
+  // const timeStr = `${parts.find(p => p.type === "hour").value}:${parts.find(p => p.type === "minute").value}:${parts.find(p => p.type === "second").value}`;
+
+  // return `${dateStr} ${timeStr}`;
+   return new Intl.DateTimeFormat("sv-SE", options).format(date);
+};
+
+
+// const formatDateTime = (isoString) => {
+//   if (!isoString) return "-";
+//   const date = new Date(isoString);
+
+//   // Force IST conversion
+//   const options = {
+//     timeZone: "Asia/Kolkata",
+//     year: "numeric",
+//     month: "2-digit",
+//     day: "2-digit",
+//     hour: "2-digit",
+//     minute: "2-digit",
+//     second: "2-digit",
+//     hour12: false,
+//   };
+
+//   return new Intl.DateTimeFormat("en-GB", options).format(date).replace(",", "");
+// };
+
+
+
+
+
+// Helper to get only YYYY-MM-DD
+const formatDateOnly = (isoString) => {
+  if (!isoString) return "-";
+  const date = new Date(isoString);
+  // Get local date in 'YYYY-MM-DD' format
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+  return `${year}-${month}-${day}`;
 };
 
 
@@ -263,7 +351,8 @@ const downloadCSV = () => {
 
   const rows = flats.map(flat => [
   flat.updated_at ? formatDateTime(flat.updated_at) : "-",
-  flat.booking_date ? formatDateTime(flat.booking_date) : "-",
+  // flat.booking_date ? formatDateTime(flat.booking_date) : "-",
+   flat.booking_date ? formatDateOnly(flat.booking_date) : "-",
   flat.wing || "-",
   flat.flat_number || "-",
   flat.flat_number ? flat.flat_number.substring(0, 1) : "-",
@@ -607,8 +696,16 @@ const downloadCSV = () => {
             {flats.map((flat) => (
               <TableRow key={flat.flat_key}>
               
-                <TableCell>{formatDateTime(flat.updated_at)}</TableCell>
-<TableCell>{formatDateTime(flat.booking_date)}</TableCell>
+                {/* <TableCell>{flat.updated_at}</TableCell> */}
+                <TableCell>{new Date(flat.updated_at).toLocaleString('en-IN', {
+    timeZone: 'Asia/Kolkata',
+    dateStyle: 'medium',
+    timeStyle: 'short',
+  })}</TableCell>
+
+{/* <TableCell>{formatDateTime(flat.booking_date)}</TableCell> */}
+<TableCell>{flat.booking_date || "-"}</TableCell>
+
 
                 <TableCell>{flat.wing}</TableCell>
                 <TableCell>{flat.flat_number}</TableCell>
