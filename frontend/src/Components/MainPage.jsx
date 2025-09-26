@@ -1,21 +1,7 @@
 import React, { useState,useEffect } from "react";
 import {
-  Typography,
-  Box,
-  Grid,
-  Card,
-  Drawer,
-  CardContent,
-  Button,
-  Modal,
-  TextField,
-  MenuItem,
- Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableRow,
-  useMediaQuery, useTheme
+  Typography,Box,Grid,Card,Drawer,CardContent,Button,Modal,TextField,MenuItem,Table,
+  TableBody,TableCell,TableHead,TableRow,useMediaQuery, useTheme
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import IconButton from "@mui/material/IconButton";
@@ -56,13 +42,10 @@ const fetchFlats = async () => {
   try {
     // --localhost
     // const res = await fetch("http://localhost:5000/api/flats");   
-    
-// netlify :
+    // netlify :
     const res = await fetch("/api/flats");                              
-
     let data = await res.json();
     const now = new Date();
-
     data = data.map(f => {
       if (f.status === "hold" && f.hold_until) {
         const holdUntil = new Date(f.hold_until);
@@ -129,10 +112,7 @@ const [formData, setFormData] = useState({
 const handleFlatClick = (flat, wing) => {
   const flatKey = getFlatKey(flat, wing);
   const currentStatus = flatStatus[flatKey]?.status || "unsold";
-
-  //  If sold or landowner, do not open modal
-  
-
+//  If sold or landowner, do not open modal
   if (currentStatus === "sold") {
   setToast({
     open: true,
@@ -192,31 +172,9 @@ if (currentStatus === "landowner") {
     let payload = { status: formData.status, date: formData.date, agreementvalue: formData.agreementvalue,
   saleablearea: formData.saleablearea,
   cost: formData.cost };
-//      if (formData.status === "hold") {
-//       // const holdUntil = new Date(Date.now() + 10 * 1000); // 1 min hold
-//       const holdUntil = new Date(Date.now() + 60 * 60 * 1000); // 1 hour hold
-//       // Convert to local MySQL-friendly format
-//       // const localDateTime = holdUntil.toLocaleString("sv-SE", { hour12: false }).replace(" ", "T");
-//       // payload.holdUntil = localDateTime;
-
-
-
-//       // IST 
-//       const parts = new Intl.DateTimeFormat("sv-SE", options).formatToParts(holdUntil);
-// const dateStr = `${parts.find(p => p.type === "year").value}-${parts.find(p => p.type === "month").value}-${parts.find(p => p.type === "day").value}`;
-// const timeStr = `${parts.find(p => p.type === "hour").value}:${parts.find(p => p.type === "minute").value}:${parts.find(p => p.type === "second").value}`;
-
-// payload.holdUntil = `${dateStr} ${timeStr}`; // MySQL friendl
-//     } else {
-//       payload.holdUntil = null;
-//     }
-
-
-
 if (formData.status === "hold") {
   const holdUntil = new Date(Date.now() + 60 * 60 * 1000); // +1 hour
-
-  const options = {
+   const options = {
     timeZone: "Asia/Kolkata",
     year: "numeric",
     month: "2-digit",
@@ -235,9 +193,7 @@ if (formData.status === "hold") {
 } else {
   payload.holdUntil = null;
 }
-
-
-    const res = await fetch(`/api/flats/${selectedFlat.flatKey}`, {
+ const res = await fetch(`/api/flats/${selectedFlat.flatKey}`, {
     // localhost:
     // const res = await fetch(`http://localhost:5000/api/flats/${selectedFlat.flatKey}`, {
       method: "PUT",
@@ -286,39 +242,10 @@ const date = new Date(isoString);
     hour12: false,
   };
 
-  // const parts = new Intl.DateTimeFormat("sv-SE", options).formatToParts(date);
-  // const dateStr = `${parts.find(p => p.type === "year").value}-${parts.find(p => p.type === "month").value}-${parts.find(p => p.type === "day").value}`;
-  // const timeStr = `${parts.find(p => p.type === "hour").value}:${parts.find(p => p.type === "minute").value}:${parts.find(p => p.type === "second").value}`;
-
-  // return `${dateStr} ${timeStr}`;
    return new Intl.DateTimeFormat("sv-SE", options).format(date);
 };
 
 
-// const formatDateTime = (isoString) => {
-//   if (!isoString) return "-";
-//   const date = new Date(isoString);
-
-//   // Force IST conversion
-//   const options = {
-//     timeZone: "Asia/Kolkata",
-//     year: "numeric",
-//     month: "2-digit",
-//     day: "2-digit",
-//     hour: "2-digit",
-//     minute: "2-digit",
-//     second: "2-digit",
-//     hour12: false,
-//   };
-
-//   return new Intl.DateTimeFormat("en-GB", options).format(date).replace(",", "");
-// };
-
-
-
-
-
-// Helper to get only YYYY-MM-DD
 const formatDateOnly = (isoString) => {
   if (!isoString) return "-";
   const date = new Date(isoString);
@@ -401,9 +328,7 @@ const downloadCSV = () => {
           </Typography>
         </Grid>
 
-        {/* Button only on desktop */}
-        {/* {isDesktop && ( */}
-          {/* // <Grid item sx={{ display: "flex", gap: 2 }}> */}
+       
          <Grid item xs={12} md={6} sx={{ mt: { xs: 2, md: 0 }, display: "flex", justifyContent: { xs: "center", md: "flex-end" }, gap: 2, flexWrap: "wrap" }}>
             <Button
   variant="contained"
