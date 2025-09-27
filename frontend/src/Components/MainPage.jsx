@@ -38,43 +38,97 @@ const FlatInventory = () => {
   };
 
 
+// const fetchFlats = async () => {
+//   try {
+//     // --localhost
+//     // const res = await fetch("http://localhost:5000/api/flats");   
+//     // netlify :
+//     const res = await fetch("/api/flats");                              
+//     let data = await res.json();
+//     const now = new Date();
+//     data = data.map(f => {
+//       if (f.status === "hold" && f.hold_until) {
+//         const holdUntil = new Date(f.hold_until);
+//         if (holdUntil < now) {
+//           f.status = "unsold"; // for expired flats
+//           f.hold_until = null;
+//         }
+//       }
+//       return f;
+//     });
+
+//     const statusMap = {};
+//     data.forEach(f => {
+//       statusMap[f.flat_key] = {
+//         status: f.status,
+//         date: f.booking_date || "",
+//         holdUntil: f.hold_until
+//       };
+//     });
+
+//     // alert(data[15].updated_at);
+//     // alert(new Date(data[15].updated_at).toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' }));
+
+//      setFlats(data);
+//     setFlatStatus(statusMap);
+//    } catch (err) {
+//     console.error("Error fetching flats:", err);
+//   }
+// };
+
 const fetchFlats = async () => {
   try {
-    // --localhost
-    // const res = await fetch("http://localhost:5000/api/flats");   
-    // netlify :
-    const res = await fetch("/api/flats");                              
+    const res = await fetch("/api/flats");
     let data = await res.json();
     const now = new Date();
-    data = data.map(f => {
-      if (f.status === "hold" && f.hold_until) {
-        const holdUntil = new Date(f.hold_until);
-        if (holdUntil < now) {
-          f.status = "unsold"; // for expired flats
-          f.hold_until = null;
-        }
-      }
-      return f;
-    });
 
+    data = await Promise.all(
+      data.map(async (f) => {
+        if (f.status === "hold" && f.hold_until) {
+          const holdUntil = new Date(f.hold_until);
+          if (holdUntil < now) {
+            // Update backend to mark flat as unsold
+            await fetch(`/api/flats/${f.flat_key}`, {
+              method: "PUT",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({
+                status: "unsold",
+                date: f.booking_date || null,
+                holdUntil: null,
+                agreementvalue: f.agreementvalue || null,
+                saleablearea: f.saleablearea || null,
+                cost: f.cost || null,
+              }),
+            });
+            f.status = "unsold";
+            f.hold_until = null;
+          }
+        }
+        return f;
+      })
+    );
+
+    // Update status map for UI
     const statusMap = {};
-    data.forEach(f => {
+    data.forEach((f) => {
       statusMap[f.flat_key] = {
         status: f.status,
         date: f.booking_date || "",
-        holdUntil: f.hold_until
+        holdUntil: f.hold_until,
       };
     });
 
-    // alert(data[15].updated_at);
-    // alert(new Date(data[15].updated_at).toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' }));
-
-     setFlats(data);
+    setFlats(data);
     setFlatStatus(statusMap);
-   } catch (err) {
+  } catch (err) {
     console.error("Error fetching flats:", err);
   }
 };
+
+
+
+
+
 
 useEffect(() => {
   fetchFlats(); // run on mount
@@ -175,7 +229,9 @@ if (currentStatus === "landowner") {
   saleablearea: formData.saleablearea,
   cost: formData.cost };
 if (formData.status === "hold") {
-  const holdUntil = new Date(Date.now() + 60 * 60 * 1000); // +1 hour
+  // const holdUntil = new Date(Date.now() + 60 * 60 * 1000); // +1 hour
+  const holdUntil = new Date(Date.now() + 10 * 1000); // +10 seconds
+
    const options = {
     timeZone: "Asia/Kolkata",
     year: "numeric",
@@ -248,15 +304,15 @@ const date = new Date(isoString);
 };
 
 
-// const formatDateOnly = (isoString) => {
-//   if (!isoString) return "-";
-//   const date = new Date(isoString);
-//   // Get local date in 'YYYY-MM-DD' format
-//   const year = date.getFullYear();
-//   const month = String(date.getMonth() + 1).padStart(2, "0");
-//   const day = String(date.getDate()).padStart(2, "0");
-//   return `${year}-${month}-${day}`;
-// };
+const formatDateOnly = (isoString) => {
+  if (!isoString) return "-";
+  const date = new Date(isoString);
+  // Get local date in 'YYYY-MM-DD' format
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+  return `${year}-${month}-${day}`;
+};
 
 
 const downloadCSV = () => {
