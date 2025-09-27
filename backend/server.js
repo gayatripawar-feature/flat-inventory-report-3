@@ -66,7 +66,7 @@ app.get("/api/flats", async (req, res) => {
         wing,
         status,
         updated_at,
-        DATE_FORMAT(CONVERT_TZ(booking_date, '+00:00', '+05:30'), '%Y-%m-%d') as booking_date,
+        DATE_FORMAT(CONVERT_TZ(booking_date, '+00:00', '+00:00'), '%Y-%m-%d') as booking_date,
         DATE_FORMAT(CONVERT_TZ(hold_until, '+00:00', '+05:30'), '%Y-%m-%d %H:%i:%s') as hold_until,
         agreementvalue,
         saleablearea,
@@ -116,8 +116,6 @@ app.put("/api/flats/:flatKey", async (req, res) => {
 });
 
 // Serve frontend (React build inside backend/dist)
-
-
 // __dirname is /opt/render/project/src/backend on Render.
 app.use(express.static(path.join(__dirname, "dist")));
 

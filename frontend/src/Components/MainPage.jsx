@@ -67,6 +67,8 @@ const fetchFlats = async () => {
     });
 
     // alert(data[15].updated_at);
+    // alert(new Date(data[15].updated_at).toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' }));
+
      setFlats(data);
     setFlatStatus(statusMap);
    } catch (err) {
@@ -246,15 +248,15 @@ const date = new Date(isoString);
 };
 
 
-const formatDateOnly = (isoString) => {
-  if (!isoString) return "-";
-  const date = new Date(isoString);
-  // Get local date in 'YYYY-MM-DD' format
-  const year = date.getFullYear();
-  const month = String(date.getMonth() + 1).padStart(2, "0");
-  const day = String(date.getDate()).padStart(2, "0");
-  return `${year}-${month}-${day}`;
-};
+// const formatDateOnly = (isoString) => {
+//   if (!isoString) return "-";
+//   const date = new Date(isoString);
+//   // Get local date in 'YYYY-MM-DD' format
+//   const year = date.getFullYear();
+//   const month = String(date.getMonth() + 1).padStart(2, "0");
+//   const day = String(date.getDate()).padStart(2, "0");
+//   return `${year}-${month}-${day}`;
+// };
 
 
 const downloadCSV = () => {
@@ -313,7 +315,7 @@ const downloadCSV = () => {
     <Box sx={{ p: 0 }}>
       
   <Box sx={{ width: "100%", bgcolor: "#802026ff", py: 1 ,mb:5}}>
-      <Grid container alignItems="center" justifyContent="space-between">
+      <Grid container alignItems="center" justifyContent="space-between" sx={{ px: { xs: 2, md: 2 } }}>
         {/* Title */}
         <Grid item xs={12} md={6}>
           <Typography
@@ -329,7 +331,10 @@ const downloadCSV = () => {
         </Grid>
 
        
+
          <Grid item xs={12} md={6} sx={{ mt: { xs: 2, md: 0 }, display: "flex", justifyContent: { xs: "center", md: "flex-end" }, gap: 2, flexWrap: "wrap" }}>
+           
+          
             <Button
   variant="contained"
   sx={{
@@ -359,85 +364,228 @@ const downloadCSV = () => {
         {/* )} */}
       </Grid>
     </Box>
-      {/* Legend */}
-      <Box sx={{ display: "flex", justifyContent: "center", gap: 3, mb: 4 }}>
-        {Object.entries(statusColors).map(([status, color]) => (
-          <Box key={status} sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-            <Box
-              sx={{
-                width: 20,
-                height: 20,
-                backgroundColor: color,
-                borderRadius: "4px",
-                border: "1px solid #ccc",
-              }}
-            />
-            <Typography variant="body1" sx={{ textTransform: "capitalize" }}>
-              {/* {status} */}
-                {status === "landowner" ? "Booked" : status}
-            </Typography>
-          </Box>
-        ))}
+    
+
+<Box
+  sx={{
+    display: "flex",
+    flexDirection: { xs: "column", md: "row" }, //  on mobile
+    alignItems: { xs: "stretch", md: "center" },
+    mb: 5,
+    px: { xs: 2, md: 1 }, // To reduce right padding on desktop
+    gap: { xs: 2, md: 3 },
+    ml: { xs: 0, md: -2 }, // To shift the whole section slightly left on desktop
+  }}
+>
+
+{/*  
+  <Card
+    sx={{
+      minWidth: 126,
+      bgcolor: "#ff4b2b",
+      color: "#fff",
+      p: 0,
+      ml: 3,
+      animation: "pulse 2s infinite",
+      
+      "@keyframes pulse": {
+        "0%": { transform: "scale(1)", boxShadow: "0 0 0 rgba(0,0,0,0.2)" },
+        "50%": { transform: "scale(1.05)", boxShadow: "0 0 15px rgba(255,75,43,0.6)" },
+        "100%": { transform: "scale(1)", boxShadow: "0 0 0 rgba(0,0,0,0.2)" },
+      },
+    }}
+  >
+    <CardContent sx={{ pt: 1, pb: 1 }}>
+      <Typography variant="h6" fontWeight="bold" sx={{ mb: 0 }}>
+        ₹{" "}
+        {(() => {
+          const soldFlats = flats.filter(
+            (f) => f.status?.toLowerCase() === "sold" && f.cost
+          );
+          const totalCost = soldFlats.reduce(
+            (sum, f) => sum + Number(f.cost || 0),
+            0
+          );
+          return soldFlats.length
+            ? (totalCost / soldFlats.length).toLocaleString("en-IN", {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2,
+              })
+            : 0;
+        })()}
+      </Typography>
+    </CardContent>
+  </Card> */}
+
+<Card
+  sx={{
+    minWidth: 126,
+    bgcolor: "#ff4b2b",
+    color: "#fff",
+    p: 0,
+    ml: 3,
+    animation: "pulse 2s infinite",
+    transformOrigin: "top center",
+  
+    "@keyframes pulse": {
+      "0%": { transform: "scale(1)", boxShadow: "0 0 0 rgba(0,0,0,0.2)" },
+      "50%": { transform: "scale(1.05)", boxShadow: "0 0 15px rgba(255,75,43,0.6)" },
+      "100%": { transform: "scale(1)", boxShadow: "0 0 0 rgba(0,0,0,0.2)" },
+    },
+  }}
+>
+  <CardContent sx={{ pt: 3, pb: 2 }}>
+    <Typography variant="h6" fontWeight="bold" sx={{ mb: 0, lineHeight: 1 }}>
+      ₹ {" "}
+      {(() => {
+        const soldFlats = flats.filter(
+          (f) => f.status?.toLowerCase() === "sold" && f.cost
+        );
+        const totalCost = soldFlats.reduce(
+          (sum, f) => sum + Number(f.cost || 0),
+          0
+        );
+        return soldFlats.length
+          ? (totalCost / soldFlats.length).toLocaleString("en-IN", {
+              minimumFractionDigits: 2,
+              maximumFractionDigits: 2,
+            })
+          : 0;
+      })()}
+    </Typography>
+  </CardContent>
+</Card>
+
+  <Box sx={{ flex: 1, display: "flex", justifyContent: "center", gap: 3 }}>
+    {Object.entries(statusColors).map(([status, color]) => (
+      <Box key={status} sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+        <Box
+          sx={{
+            width: 20,
+            height: 20,
+            backgroundColor: color,
+            borderRadius: "4px",
+            border: "1px solid #ccc",
+          }}
+        />
+        <Typography variant="body1" sx={{ textTransform: "capitalize" }}>
+          {status === "landowner" ? "Booked" : status}
+        </Typography>
       </Box>
+    ))}
+  </Box>
+</Box> 
 
-      {/* Wings */}
-      {/* <Grid container spacing={8}> */}
-      <Grid container spacing={4} justifyContent="center">
-        {Object.keys(wings).map((wing) => (
-          <Grid item xs={12} md={4} key={wing}>
-            <Card sx={{ boxShadow: 3 }}>
-              <CardContent>
-                <Typography
-                  variant="h6"
-                  fontWeight="bold"
-                  textAlign="center"
-                  mb={2}
-                >
-                  {wing}
-                </Typography>
 
-                <Box sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
-                  {wings[wing].map((row, rowIndex) => (
-                    <Box
-                      key={rowIndex}
+
+
+      {/* Card + Wings in one row */}
+{/* <Grid container spacing={4} alignItems="flex-start"> */}
+<Grid container spacing={4} alignItems="flex-start" justifyContent="center">
+  {/* Average Value Card on left */}
+  {/* <Grid item xs={12} md={3} sx={{ ml: 3 ,mr:6}}>
+    <Card
+      sx={{
+        minWidth: 126,
+        bgcolor: "#ff4b2b",
+        color: "#fff",
+        p: 0,
+        animation: "pulse 2s infinite",
+        "@keyframes pulse": {
+          "0%": { transform: "scale(1)", boxShadow: "0 0 0 rgba(0,0,0,0.2)" },
+          "50%": {
+            transform: "scale(1.05)",
+            boxShadow: "0 0 15px rgba(255,75,43,0.6)",
+          },
+          "100%": {
+            transform: "scale(1)",
+            boxShadow: "0 0 0 rgba(0,0,0,0.2)",
+          },
+        },
+      }}
+    >
+     
+      <CardContent sx={{ pt: 1, pb: 1 }}>
+  <Typography variant="h6" fontWeight="bold">
+    ₹{" "}
+    {(() => {
+      const soldFlats = flats.filter(
+        (f) => f.status?.toLowerCase() === "sold" && f.cost
+      );
+      const totalCost = soldFlats.reduce(
+        (sum, f) => sum + Number(f.cost || 0),
+        0
+      );
+      return soldFlats.length
+        ? (totalCost / soldFlats.length).toLocaleString("en-IN", {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2,
+          })
+        : 0;
+    })()}
+  </Typography>
+</CardContent>
+
+    </Card>
+  </Grid> */}
+
+  {/* Wings on the right */}
+  {Object.keys(wings).map((wing) => (
+    <Grid item xs={12} md={3} key={wing}  >
+      <Card sx={{ boxShadow: 3 }}>
+        <CardContent>
+          <Typography
+            variant="h6"
+            fontWeight="bold"
+            textAlign="center"
+            mb={2}
+          >
+            {wing}
+          </Typography>
+
+          <Box sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
+            {wings[wing].map((row, rowIndex) => (
+              <Box
+                key={rowIndex}
+                sx={{
+                  display: "flex",
+                  gap: 1,
+                  justifyContent: "center",
+                }}
+              >
+                {row.map((flat) => {
+                  const flatKey = getFlatKey(flat, wing);
+                  const status = flatStatus[flatKey]?.status || "unsold";
+                  return (
+                    <Button
+                      key={flat}
+                      variant="contained"
+                      onClick={() => handleFlatClick(flat, wing)}
                       sx={{
-                        display: "flex",
-                        gap: 1,
-                        justifyContent: "center",
+                        minWidth: 60,
+                        height: 40,
+                        backgroundColor: statusColors[status],
+                        border: "1px solid #ccc",
+                        color: status === "unsold" ? "black" : "white",
+                        "&:hover": {
+                          backgroundColor: statusColors[status],
+                          opacity: 0.85,
+                        },
                       }}
                     >
-                      {row.map((flat) => {
-                        const flatKey = getFlatKey(flat, wing);
-                        const status = flatStatus[flatKey]?.status || "unsold";
-                        return (
-                          <Button
-                            key={flat}
-                            variant="contained"
-                            onClick={() => handleFlatClick(flat, wing)}
-                            sx={{
-                              minWidth: 60,
-                              height: 40,
-                              backgroundColor: statusColors[status],
-                              border: "1px solid #ccc",
-                              color: status === "unsold" ? "black" : "white",
-                              "&:hover": {
-                                backgroundColor: statusColors[status],
-                                opacity: 0.85,
-                              },
-                            }}
-                          >
-                            {flat}
-                          </Button>
-                        );
-                      })}
-                    </Box>
-                  ))}
-                </Box>
-              </CardContent>
-            </Card>
-          </Grid>
-        ))}
-      </Grid>
+                      {flat}
+                    </Button>
+                  );
+                })}
+              </Box>
+            ))}
+          </Box>
+        </CardContent>
+      </Card>
+    </Grid>
+  ))}
+</Grid>
+
 
       {/* Modal */}
       <Modal open={openModal} onClose={() => setOpenModal(false)}>
@@ -543,7 +691,7 @@ const downloadCSV = () => {
             <MenuItem value="unsold">Unsold</MenuItem>
             <MenuItem value="sold">Sold</MenuItem>
             <MenuItem value="hold">Hold</MenuItem>
-            <MenuItem value="landowner">Landowner</MenuItem>
+            {/* <MenuItem value="landowner">Landowner</MenuItem> */}
           </TextField>
 
           <Box sx={{ display: "flex", justifyContent: "flex-end", gap: 2 }}>
@@ -620,7 +768,6 @@ const downloadCSV = () => {
           <TableBody>
             {flats.map((flat) => (
               <TableRow key={flat.flat_key}>
-              
                 {/* <TableCell>{flat.updated_at}</TableCell> */}
                 <TableCell>{new Date(flat.updated_at).toLocaleString('en-IN', {
     timeZone: 'Asia/Kolkata',
