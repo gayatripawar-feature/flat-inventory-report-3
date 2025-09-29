@@ -82,17 +82,53 @@ app.get("/api/flats", async (req, res) => {
 
 
 
+// app.put("/api/flats/:flatKey", async (req, res) => {
+//   const flatKey = req.params.flatKey;
+//   const { status, date, holdUntil, agreementvalue, saleablearea, cost } = req.body;
+//   console.log("Saving flat:", flatKey, status, date, holdUntil, agreementvalue, saleablearea, cost);
+
+//   try {
+//     const [result] = await pool.query(
+//       `UPDATE flats 
+//        SET status = ?, booking_date = ?, hold_until = ?, agreementvalue = ?, saleablearea = ?, cost = ?, updated_at = CURRENT_TIMESTAMP
+//        WHERE flat_key = ?`,
+//       [status, date || null, holdUntil || null, agreementvalue || null, saleablearea || null, cost || null, flatKey]
+//     );
+
+//     if (result.affectedRows === 0) {
+//       const flatNumber = flatKey.slice(0, -1);
+//       const wing = flatKey.slice(-1);
+//       const datetime = new Date();
+
+//       await pool.query(
+//         `INSERT INTO flats 
+//          (flat_number, wing, flat_key, status, booking_date, hold_until, agreementvalue, saleablearea, cost, updated_at ) 
+//          VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?,?)`,
+//         [flatNumber, wing, flatKey, status, date || null, holdUntil || null, agreementvalue || null, saleablearea || null, cost || null, datetime]
+//       );
+//     }
+
+//     res.json({ message: "Flat saved successfully" });
+//   } catch (err) {
+//     console.error("Error saving flat:", err);
+//     res.status(500).json({ error: err.message });
+//   }
+// });
+
+
+
+
 app.put("/api/flats/:flatKey", async (req, res) => {
   const flatKey = req.params.flatKey;
-  const { status, date, holdUntil, agreementvalue, saleablearea, cost } = req.body;
-  console.log("Saving flat:", flatKey, status, date, holdUntil, agreementvalue, saleablearea, cost);
+  const { status, date, hold_until, agreementvalue, saleablearea, cost } = req.body;
+  console.log("Saving flat:", flatKey, status, date, hold_until, agreementvalue, saleablearea, cost);
 
   try {
     const [result] = await pool.query(
       `UPDATE flats 
        SET status = ?, booking_date = ?, hold_until = ?, agreementvalue = ?, saleablearea = ?, cost = ?, updated_at = CURRENT_TIMESTAMP
        WHERE flat_key = ?`,
-      [status, date || null, holdUntil || null, agreementvalue || null, saleablearea || null, cost || null, flatKey]
+      [status, date || null, hold_until || null, agreementvalue || null, saleablearea || null, cost || null, flatKey]
     );
 
     if (result.affectedRows === 0) {
@@ -104,7 +140,7 @@ app.put("/api/flats/:flatKey", async (req, res) => {
         `INSERT INTO flats 
          (flat_number, wing, flat_key, status, booking_date, hold_until, agreementvalue, saleablearea, cost, updated_at ) 
          VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?,?)`,
-        [flatNumber, wing, flatKey, status, date || null, holdUntil || null, agreementvalue || null, saleablearea || null, cost || null, datetime]
+        [flatNumber, wing, flatKey, status, date || null, hold_until || null, agreementvalue || null, saleablearea || null, cost || null, datetime]
       );
     }
 
@@ -114,7 +150,6 @@ app.put("/api/flats/:flatKey", async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 });
-
 // Serve frontend (React build inside backend/dist)
 // __dirname is /opt/render/project/src/backend on Render.
 app.use(express.static(path.join(__dirname, "dist")));
