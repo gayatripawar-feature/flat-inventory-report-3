@@ -2396,11 +2396,14 @@ const downloadCSV = () => {
             {flats.map((flat) => (
               <TableRow key={flat.flat_key}>
                 {/* <TableCell>{flat.updated_at}</TableCell> */}
-                <TableCell>{new Date(flat.updated_at).toLocaleString('en-IN', {
-    timeZone: 'Asia/Kolkata',
-    dateStyle: 'medium',
-    timeStyle: 'short',
-  })}</TableCell>
+              
+                <TableCell>
+        {new Date().toLocaleString('en-IN', {
+          timeZone: 'Asia/Kolkata',
+          dateStyle: 'medium',
+          timeStyle: 'short',
+        })}
+      </TableCell>
 
 {/* <TableCell>{formatDateTime(flat.booking_date)}</TableCell> */}
 <TableCell>{flat.booking_date || "-"}</TableCell>
