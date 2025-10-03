@@ -386,6 +386,334 @@ const handleBHKChange = (flatKey, newBHK) => {
 
 
 
+// const downloadExcel = () => {
+
+//   // SOLD UNITS and 2 BHK are dynamic columns . and 
+//   // totalUnitsInProject and Sanctionunit and Nonsanctioned and NoOfUnitsToSell and LANDOWNERS FLATS and 3 BHK are static values 
+//   const workbook = new ExcelJS.Workbook();
+//   const sheet = workbook.addWorksheet("Project Inventory");
+
+
+
+//   sheet.addRow([]);
+
+// sheet.mergeCells("A1:M1");
+// const titleCell = sheet.getCell("A1");
+// titleCell.value = "PROJECT INVENTORY SUMMARY";
+// titleCell.font = { bold: true, size: 14, color: { argb: "FFFFFFFF" } };
+// titleCell.fill = { type: "pattern", pattern: "solid", fgColor: { argb: "FF4F81BD" } };
+// titleCell.alignment = { horizontal: "center", vertical: "middle" };
+
+// sheet.addRow([]);
+// const totalWings = 7;  
+// const flatsPerWing = 28;
+// const totalUnitsInProject = totalWings * flatsPerWing; // 196
+// console.log("Total flats:", totalUnitsInProject);
+// const Sanctionunit = 84;
+
+// const sanctioned2BHK = 84;
+// const sanctioned3BHK = 0;
+
+// const totalSanctioned = sanctioned2BHK + sanctioned3BHK;
+// const Nonsanctioned = totalUnitsInProject - totalSanctioned;
+
+
+// const landownersFlats = 19;
+// // const landonwners2BHKFlats =18;
+// const landowners3BHKFlats = 0;
+// const landowners2BHKCalculated = landownersFlats - landowners3BHKFlats;
+// const NoOfUnitsToSell = Sanctionunit-landownersFlats;
+// const availableUnitsForSale = Sanctionunit-landownersFlats;
+
+// const nonSanctioned3BHKManual = 14; // Your specified value
+// const nonSanctioned2BHKCalculated = Nonsanctioned - nonSanctioned3BHKManual;
+
+
+// // Calculate summary
+// const summary = {
+//   "2 BHK": { sanctioned: 0, nonSanctioned: 0, total: 0 },
+//   "3 BHK": { sanctioned: 0, nonSanctioned: 0, total: 0 },
+//   "UNITS FOR SALE": 0,
+//   "SANCTIONED UNITS": 0,
+//   "SOLD UNITS": 0,
+// };
+
+
+// flats.forEach(flat => {
+//   const bhk = flat.bhk ? flat.bhk.toUpperCase().trim() : "OTHER";
+//   const bhkCategory = bhk.includes("2BHK") ? "2 BHK" : bhk.includes("3BHK") ? "3 BHK" : null;
+//   // BHK-wise counts (only if BHK is 2BHK or 3BHK)
+//   if (bhkCategory) {
+//     summary[bhkCategory].total++;
+
+//     const statusBHK = flat.status ? flat.status.toLowerCase().trim() : "";
+//     // if (statusBHK === "sold" || statusBHK === "hold") {
+//     //   summary[bhkCategory].sanctioned++;
+//     // } else {
+//     //   summary[bhkCategory].nonSanctioned++;
+//     // }
+//   }
+
+//   // Overall counts (all flats, ignore BHK)
+//   const statusOverall = flat.status ? flat.status.toLowerCase().trim() : "";
+//   if (statusOverall === "sold") summary["SOLD UNITS"]++;
+//   if (statusOverall === "sold" || statusOverall === "hold") summary["SANCTIONED UNITS"]++;
+//   else summary["UNITS FOR SALE"]++;
+  
+
+// //   summary["2 BHK"].sanctioned = 84;  // fixed
+// // summary["3 BHK"].sanctioned = 0;
+// });
+
+
+
+//   console.log("Sold Units Count:", summary["SOLD UNITS"]);
+// const sold2BHK = summary["2 BHK"].sanctioned; 
+// const sold3BHK = summary["3 BHK"].sanctioned;
+
+// const totalAvailable2BHK = availableUnitsForSale - summary["SOLD UNITS"];
+
+// const totalAvailable3BHK = 0;
+
+// const bookedFlatsCount = flats.filter(flat => flat.status && flat.status.toLowerCase() === "booked").length;
+
+// const unitsForSale2BHK = NoOfUnitsToSell; 
+
+// const unitsForSale3BHK = sanctioned3BHK - landowners3BHKFlats;
+
+
+// // const availableUnits2BHK = unitsForSale2BHK - summary["SOLD UNITS"];
+
+// // const availableUnits3BHK = unitsForSale3BHK - sold3BHK;
+
+// // flat type:
+// let sold2BHKCount = 0;
+// let sold3BHKCount = 0;
+
+
+
+
+// // flats.forEach(flat => {
+// //   // Use flat_type instead of bhk
+// //   const bhk = flat.flat_type ? flat.flat_type.toUpperCase().replace(/\s+/g, "") : "";
+// //   const status = flat.status ? flat.status.toLowerCase().trim() : "";
+
+// //   if (status === "sold") {
+// //     if (bhk.includes("2BHK")) sold2BHKCount++;
+// //     else if (bhk.includes("3BHK")) sold3BHKCount++;
+// //   }
+// // });
+// flats.forEach(flat => {
+//   // Use flat_type instead of bhk
+//   let bhk = flat.flat_type ? flat.flat_type.toUpperCase().replace(/\s+/g, "") : "";
+
+//   // If flat_type is missing, default to 2BHK or 3BHK
+//   if (!bhk) {
+//     // Default logic: e.g., most flats are 2BHK if type missing
+//     bhk = "2BHK"; 
+//   }
+
+//   const status = flat.status ? flat.status.toLowerCase().trim() : "";
+
+//   if (status === "sold") {
+//     if (bhk.includes("2BHK")) sold2BHKCount++;
+//     else if (bhk.includes("3BHK")) sold3BHKCount++;
+//   }
+
+// //   if (status === "sold" || status === "hold") {
+// //     if (bhk.includes("2BHK")) sold2BHKCount++;
+// //     else if (bhk.includes("3BHK")) sold3BHKCount++;
+// // }
+
+// });
+// console.log("Sold 2BHK:", sold2BHKCount, "Sold 3BHK:", sold3BHKCount);
+
+
+// const availableUnits2BHK = unitsForSale2BHK - sold2BHKCount;
+
+// const availableUnits3BHK = unitsForSale3BHK - sold3BHKCount;
+// sheet.mergeCells("A2:A3"); // TOTAL UNITS IN PROJECT
+
+// // Columns where we will add sub-columns
+// sheet.mergeCells("B2:C2"); // SANCTIONED UNITS (will span B2:C2)
+// sheet.mergeCells("D2:E2"); // NON-SANCTIONED FLATS
+// sheet.mergeCells("F2:G2"); // UNITS FOR SALE
+// sheet.mergeCells("H2:I2"); // LANDOWNERS FLATS
+
+// sheet.mergeCells("J2:K2"); // SOLD UNITS (existing)
+// sheet.mergeCells("L2:M2"); // AVAILABLE UNITS FOR SALE (existing)
+// // sheet.mergeCells("N2:O2"); // FLATS AVAILABLE FOR SALE (existing)
+
+
+// // Row 2: Top headers
+// const headerTop = sheet.getRow(2);
+
+// sheet.getCell("A2").value = "TOTAL UNITS IN PROJECT";
+// sheet.getCell("B2").value = "SANCTIONED UNITS";
+// sheet.getCell("D2").value = "NON-SANCTIONED FLATS";
+// sheet.getCell("F2").value = "LANDOWNERS FLATS";
+// sheet.getCell("H2").value = "UNITS FOR SALE";
+// sheet.getCell("J2").value = "SOLD UNITS";
+// sheet.getCell("L2").value = "AVAILABLE UNITS FOR SALE";
+
+// sheet.getCell("B3").value = "2 BHK";
+// sheet.getCell("C3").value = "3 BHK";
+
+
+// sheet.getCell("D3").value = "2 BHK";
+// sheet.getCell("E3").value = "3 BHK";
+
+
+// sheet.getCell("F3").value = "2 BHK";
+// sheet.getCell("G3").value = "3 BHK";
+
+
+// sheet.getCell("H3").value = "2 BHK";
+// sheet.getCell("I3").value = "3 BHK";
+
+// // Sub-columns for SOLD UNITS (already exists)
+// sheet.getCell("J3").value = "2 BHK";
+// sheet.getCell("K3").value = "3 BHK";
+
+// // Sub-columns for AVAILABLE UNITS FOR SALE
+// sheet.getCell("L3").value = "2 BHK";
+// sheet.getCell("M3").value = "3 BHK";
+
+
+// headerTop.eachCell(cell => {
+//   cell.font = { bold: true, color: { argb: "FFFFFFFF" } };
+//   cell.fill = { type: "pattern", pattern: "solid", fgColor: { argb: "FF4F81BD" } };
+//   cell.alignment = { horizontal: "center", vertical: "middle" };
+//   cell.border = {
+//     top: { style: "thin" },
+//     bottom: { style: "thin" },
+//     left: { style: "thin" },
+//     right: { style: "thin" },
+//   };
+// });
+
+
+// const headerBottom = sheet.getRow(3);
+// headerBottom.eachCell(cell => {
+//     // This will style F3, G3, I3, J3
+//     cell.font = { bold: true, color: { argb: "FFFFFFFF" } };
+//     cell.fill = { type: "pattern", pattern: "solid", fgColor: { argb: "FF4F81BD" } };
+//     cell.alignment = { horizontal: "center", vertical: "middle" };
+//     cell.border = {
+//         top: { style: "thin" },
+//         bottom: { style: "thin" },
+//         left: { style: "thin" },
+//         right: { style: "thin" },
+//     };
+// });
+
+
+// const dataRow = sheet.addRow([
+//   totalUnitsInProject,        // A: TOTAL UNITS IN PROJECT
+// //  Sanctionunit,  // B: SANCTIONED 2 BHK
+// //   Nonsanctioned, // C: SANCTIONED 3 BHK
+// sanctioned2BHK,             // B: 2 BHK sanctioned
+//   sanctioned3BHK, 
+//   nonSanctioned2BHKCalculated, // D: NON-SANCTIONED 2 BHK
+//   nonSanctioned3BHKManual,     // E: NON-SANCTIONED 3 BHK
+//   landowners2BHKCalculated,    // F: LANDOWNERS 2 BHK
+//   landowners3BHKFlats,         // G: LANDOWNERS 3 BHK
+//   unitsForSale2BHK,            // H: UNITS FOR SALE 2 BHK
+//   unitsForSale3BHK,            // I: UNITS FOR SALE 3 BHK
+//   // sold2BHK,                     // J: SOLD UNITS 2 BHK
+
+//   // summary["SOLD UNITS"],
+//   // sold3BHK,                     // K: SOLD UNITS 3 BHK
+//  sold2BHKCount,
+//   sold3BHKCount,
+  
+//   availableUnits2BHK,           // L: AVAILABLE UNITS 2 BHK
+//   availableUnits3BHK,           // M: AVAILABLE UNITS 3 BHK
+//   // totalAvailable2BHK,           // N: FLATS AVAILABLE 2 BHK
+//   // totalAvailable3BHK            // O: FLATS AVAILABLE 3 BHK
+// ]);
+
+// dataRow.eachCell(cell => {
+//   cell.alignment = { horizontal: "center", vertical: "middle" ,indent: 2 };
+//   cell.border = {
+//     top: { style: "thin" },
+//     bottom: { style: "thin" },
+//     left: { style: "thin" },
+//     right: { style: "thin" },
+//   };
+// });
+
+// sheet.addRow([]); // spacing
+
+
+// sheet.addRow([]); // spacing before next table
+
+//   // -----------------------------
+//   // 4️⃣ Flat Inventory Details
+//   // -----------------------------
+//   const startRow = sheet.lastRow.number + 1;
+//   sheet.mergeCells(`A${startRow}:I${startRow}`);
+//   const detailsTitleCell = sheet.getCell(`A${startRow}`);
+//   detailsTitleCell.value = "FLAT INVENTORY DETAILS";
+//   detailsTitleCell.font = { bold: true, size: 14, color: { argb: "FFFFFFFF" } };
+//   detailsTitleCell.fill = { type: "pattern", pattern: "solid", fgColor: { argb: "FF4F81BD" } };
+//   detailsTitleCell.alignment = { horizontal: "center", vertical: "middle" };
+
+//   sheet.addRow([]);
+
+//   const headers = ["Timestamp","BookindDate","Flat No","Flat Type" ,"Wing","Status","Agreement Value","Saleable Area","Cost/Sq.ft"];
+//   const detailsHeaderRow = sheet.addRow(headers);
+//   detailsHeaderRow.eachCell(cell => {
+//     cell.font = { bold: true, color: { argb: "FFFFFFFF" } };
+//     cell.fill = { type: "pattern", pattern: "solid", fgColor: { argb: "FF808080" } };
+//     cell.alignment = { horizontal: "center", vertical: "middle" };
+//     cell.border = {
+//       top: { style: "thin" },
+//       bottom: { style: "thin" },
+//       left: { style: "thin" },
+//       right: { style: "thin" },
+//     };
+//   });
+
+//   // Flat data rows
+//   flats.forEach(flat => {
+//     const row = sheet.addRow([
+//       flat.updated_at ? formatDateTime(flat.updated_at) : "-",
+//     flat.booking_date ? formatDateOnly(flat.booking_date) : "-",
+//       flat.flat_number || "-",
+//       flat.flat_type || "-",
+//       flat.wing || "-",
+     
+//       flat.status || "-",
+//      flat.agreementvalue || "-",
+//      flat.saleablearea || "-",
+//       flat.cost || "-"
+//     ]);
+//     row.eachCell(cell => {
+//       cell.alignment = { horizontal: "center", vertical: "middle" };
+//       cell.border = {
+//         top: { style: "thin" },
+//         bottom: { style: "thin" },
+//         left: { style: "thin" },
+//         right: { style: "thin" },
+//       };
+//     });
+//   });
+
+//   // Column widths
+//   const columnWidths = [12, 12, 10, 15, 20, 18, 15];
+//   sheet.columns.forEach((col, i) => { col.width = columnWidths[i]; });
+
+//   // -----------------------------
+//   // Save Excel
+//   // -----------------------------
+//   workbook.xlsx.writeBuffer().then(buffer => {
+//     const blob = new Blob([buffer], { type: "application/octet-stream" });
+//     saveAs(blob, "ProjectInventory.xlsx");
+//   });
+// };
+
+
 const downloadExcel = () => {
 
   // SOLD UNITS and 2 BHK are dynamic columns . and 
@@ -418,15 +746,32 @@ const totalSanctioned = sanctioned2BHK + sanctioned3BHK;
 const Nonsanctioned = totalUnitsInProject - totalSanctioned;
 
 
-const landownersFlats = 19;
+// const landownersFlats = 19;
 // const landonwners2BHKFlats =18;
-const landowners3BHKFlats = 0;
-const landowners2BHKCalculated = landownersFlats - landowners3BHKFlats;
-const NoOfUnitsToSell = Sanctionunit-landownersFlats;
-const availableUnitsForSale = Sanctionunit-landownersFlats;
+
+let landowner2BHKCount = 0;
+let landowner3BHKCount = 0;
+
+// const landowners3BHKFlats = 0;
+
+
+
+// after dynamic landowner:
+// const landowners2BHKCalculated = landowner2BHKCount;
+// const landowners3BHKFlats = landowner3BHKCount;
+// const landownersFlats = landowner2BHKCount + landowner3BHKCount; 
+
+
+
+// const landowners2BHKCalculated = landownersFlats - landowners3BHKFlats;
+// const NoOfUnitsToSell = Sanctionunit-landownersFlats;
+// const availableUnitsForSale = Sanctionunit-landownersFlats;
+
+
 
 const nonSanctioned3BHKManual = 14; // Your specified value
 const nonSanctioned2BHKCalculated = Nonsanctioned - nonSanctioned3BHKManual;
+
 
 
 // Calculate summary
@@ -466,6 +811,30 @@ flats.forEach(flat => {
 });
 
 
+// landowner:
+flats.forEach(flat => {
+    const status = flat.status ? flat.status.toLowerCase().trim() : "";
+
+    if (status === "landowner") {
+        let bhk = flat.flat_type ? flat.flat_type.toUpperCase().replace(/\s+/g, "") : "";
+        
+        // If status is 'landowner' and flat type is 3BHK, count it as 3BHK.
+        if (bhk.includes("3BHK")) {
+            landowner3BHKCount++;
+        } else {
+            // Per your request, if flat type is not mentioned or is 2BHK, count it as 2BHK.
+            landowner2BHKCount++;
+        }
+    }
+  });
+
+const landowners2BHKCalculated = landowner2BHKCount;
+const landowners3BHKFlats = landowner3BHKCount;
+const landownersFlats = landowner2BHKCount + landowner3BHKCount; 
+
+
+const NoOfUnitsToSell = Sanctionunit-landownersFlats;
+const availableUnitsForSale = Sanctionunit-landownersFlats;
 
   console.log("Sold Units Count:", summary["SOLD UNITS"]);
 const sold2BHK = summary["2 BHK"].sanctioned; 
@@ -527,7 +896,6 @@ flats.forEach(flat => {
 
 });
 console.log("Sold 2BHK:", sold2BHKCount, "Sold 3BHK:", sold3BHKCount);
-
 
 const availableUnits2BHK = unitsForSale2BHK - sold2BHKCount;
 
@@ -634,7 +1002,7 @@ sanctioned2BHK,             // B: 2 BHK sanctioned
 ]);
 
 dataRow.eachCell(cell => {
-  cell.alignment = { horizontal: "center", vertical: "middle" ,indent: 2 };
+  cell.alignment = { horizontal: "center", vertical: "middle"  };
   cell.border = {
     top: { style: "thin" },
     bottom: { style: "thin" },
