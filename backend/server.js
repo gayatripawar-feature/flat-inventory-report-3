@@ -70,7 +70,8 @@ app.get("/api/flats", async (req, res) => {
         DATE_FORMAT(CONVERT_TZ(hold_until, '+00:00', '+05:30'), '%Y-%m-%d %H:%i:%s') as hold_until,
         agreementvalue,
         saleablearea,
-        cost
+        cost,
+        flat_type
       FROM flats
     `);
     res.json(results);
@@ -120,15 +121,15 @@ app.get("/api/flats", async (req, res) => {
 
 app.put("/api/flats/:flatKey", async (req, res) => {
   const flatKey = req.params.flatKey;
-  const { status, date, hold_until, agreementvalue, saleablearea, cost } = req.body;
+  const { status, date, hold_until, agreementvalue, saleablearea, cost ,flat_type} = req.body;
   console.log("Saving flat:", flatKey, status, date, hold_until, agreementvalue, saleablearea, cost);
 
   try {
     const [result] = await pool.query(
       `UPDATE flats 
-       SET status = ?, booking_date = ?, hold_until = ?, agreementvalue = ?, saleablearea = ?, cost = ?, updated_at = CURRENT_TIMESTAMP
+       SET status = ?, booking_date = ?, hold_until = ?, agreementvalue = ?, saleablearea = ?, cost = ?, flat_type = ?, updated_at = CURRENT_TIMESTAMP
        WHERE flat_key = ?`,
-      [status, date || null, hold_until || null, agreementvalue || null, saleablearea || null, cost || null, flatKey]
+      [status, date || null, hold_until || null, agreementvalue || null, saleablearea || null, cost || null, flat_type || null, flatKey]
     );
 
     if (result.affectedRows === 0) {
@@ -138,9 +139,9 @@ app.put("/api/flats/:flatKey", async (req, res) => {
 
       await pool.query(
         `INSERT INTO flats 
-         (flat_number, wing, flat_key, status, booking_date, hold_until, agreementvalue, saleablearea, cost, updated_at ) 
-         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?,?)`,
-        [flatNumber, wing, flatKey, status, date || null, hold_until || null, agreementvalue || null, saleablearea || null, cost || null, datetime]
+         (flat_number, wing, flat_key, status, booking_date, hold_until, agreementvalue, saleablearea, cost, flat_type, updated_at ) 
+         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?,?,?)`,
+        [flatNumber, wing, flatKey, status, date || null, hold_until || null, agreementvalue || null, saleablearea || null, cost || null, flat_type || null, datetime]
       );
     }
 
